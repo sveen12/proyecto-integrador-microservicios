@@ -4,7 +4,7 @@ jdk:
 sudo: false
 install: true
 git:
-  depth: 3
+  depth: 4
 script: mvn clean verify
 deploy:
   skip_cleanup: true
