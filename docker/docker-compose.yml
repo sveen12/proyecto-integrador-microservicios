@@ -1,0 +1,97 @@
+# Configuracion microservicios adicionales
+
+# Hystrix para implementar circuit breaker
+hystrix:
+  image: udea/hystrix-dashboard
+  ports:
+   - "7979:7979"
+  links:
+   - gateway
+   - discovery
+
+# Eureka para el descubrimiento de los servicios
+discovery:
+  image: udea/discovery-microservice
+  ports:
+   - "8761:8761"
+
+# Para la configuracion de los microservicios
+configserver:
+  image: udea/config-microservice
+  ports:
+   - "8888:8888"
+  links:
+   - discovery
+
+# Zuul para el gateway
+gateway:
+  image: udea/api-gateway-microservice
+  ports:
+   - "10000:10000"
+  links:
+   - discovery
+   - configserver
+   - donaciones
+   - registro-donantes
+   - registro-enfermero
+
+
+# Microservicios propios
+
+# Micro servicio donaciones
+# BD MONGO
+mongodb:
+    container_name: bd-mongodb-donaciones
+    image: mongo
+    ports:
+      - "32769:27017"
+    restart: always
+
+donaciones:
+  image: udea/donaciones-microservice
+  links:
+   - discovery
+   - configserver
+   - mongodb
+
+# Micro servicio registro donantes
+# BD PostgreSQL
+postgreSQL:
+  container_name: bd-postgres-donantes
+  restart: always
+  image: postgres
+  ports:
+    - "5432:5432"
+  environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=root
+    - POSTGRES_DB=bd-donantes
+
+registro-donantes:
+  image: udea/registro-donantes-microservice
+  links:
+   - discovery
+   - configserver
+   - postgreSQL
+
+
+# Micro servicio registro enfermero
+# BD PostgreSQL
+mySQL:
+  container_name: bd-mysql-enfermero
+  restart: always
+  image: mysql:5.6
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_DATABASE=bd-empleado
+    - MYSQL_USER=demo_user
+    - MYSQL_PASSWORD=demo_pass
+    - MYSQL_ROOT_PASSWORD=root
+
+registro-enfermero:
+  image: udea/registro-enfermero-microservice
+  links:
+   - discovery
+   - configserver
+   - mySQL

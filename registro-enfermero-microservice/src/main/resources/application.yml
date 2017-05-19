@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: registro-enfermero
+  jpa:
+    database: MYSQL
+    hibernate:
+        ddl-auto: validate
+            
+  datasource:
+    url: jdbc:mysql://mysql:3306/bd-empleado
+    username: demo_user
+    password: demo_pass
+    driver-class-name: com.mysql.jdbc.Driver
+
+  cloud:
+    config:
+      uri: http://configserver:8888
+      
+      
+server:
+  port: 9891
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+ribbon:
+  eureka:
+    enabled: true

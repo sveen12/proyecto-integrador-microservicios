@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: donaciones
+  data:
+    mongodb:
+        uri: mongodb://192.168.99.100:32769/bd-donaciones
+      
+  cloud:
+    config:
+      uri: http://configserver:8888
+      
+encrypt:
+  failOnError: false
